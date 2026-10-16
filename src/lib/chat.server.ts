@@ -26,9 +26,9 @@ function json(status: number, error: string) {
 }
 
 export async function handleChat(request: Request) {
-  const apiKey = process.env.LOVABLE_API_KEY;
-  const url = process.env.SUPABASE_URL;
-  const anon = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const apiKey = process.env['LOVABLE_API_KEY'];
+  const url = process.env['SUPABASE_URL'];
+  const anon = process.env['SUPABASE_PUBLISHABLE_KEY'];
   if (!apiKey || !url || !anon) return json(500, "Server is not configured.");
 
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");

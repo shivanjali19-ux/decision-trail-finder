@@ -16,7 +16,7 @@ const brief = (n: Pick<NodeRow, "id" | "type" | "name" | "summary" | "status" | 
   summary: n.summary,
   status: n.status,
   updated_at: n.updated_at,
-  url: (n.props as Record<string, unknown>)?.url ?? null,
+  url: (n.props as Record<string, unknown>)?.["url"] ?? null,
 });
 
 const clean = (q: string) => q.replace(/[%,()]/g, " ").trim();

@@ -172,7 +172,6 @@ function ChatWindow({ threadId, initial }: { threadId: string; initial: UIMessag
                           type={p.type as never}
                           state={p.state as never}
                           title={meta.label}
-                          icon={<Icon className="size-4 text-primary" />}
                         />
                         <ToolContent>
                           <ToolInput input={p.input} />
