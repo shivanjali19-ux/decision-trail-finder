@@ -1,24 +1,40 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { getOrCreateLatestThread } from "@/lib/threads";
+import mark from "@/assets/cortex-mark.png";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Cortex — Company Brain AI Agent" },
+      { name: "description", content: "Ask who owns what, who knows what, and why decisions were made — answers with sources from docs, tickets and chats." },
+      { property: "og:title", content: "Cortex — Company Brain AI Agent" },
+      { property: "og:description", content: "One graph of people, teams, projects, documents and decisions." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const { session, loading } = useAuth();
+  const navigate = useNavigate();
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (loading) return;
+    if (!session) {
+      navigate({ to: "/auth" });
+      return;
+    }
+    if (started.current) return;
+    started.current = true;
+    getOrCreateLatestThread(session.user.id).then((id) => navigate({ to: "/chat/$threadId", params: { threadId: id } }));
+  }, [session, loading, navigate]);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="flex min-h-screen items-center justify-center bg-graph-paper">
+      <img src={mark} alt="" width={64} height={64} className="size-16 animate-pulse" />
     </div>
   );
 }
